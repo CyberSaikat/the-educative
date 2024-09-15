@@ -131,7 +131,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📞 Contact
 
 - **Project Lead**: [Saikat Roy](mailto:saikatroydot@gmail.com)
-- **Website**: [https://theeducative.vercel.com](https://theeducative.vercel.com)
+- **Website**: [https://the-educative.vercel.app/](https://the-educative.vercel.app/)
 
 > "Empowering growth through code: The Educative transforms learning into a journey of continuous discovery and mastery, leveraging modern tools and technologies to build the future of education."
 
