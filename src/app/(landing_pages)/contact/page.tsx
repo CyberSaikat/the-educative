@@ -90,7 +90,9 @@ const ContactUs: React.FC = () => {
             whileTap={{ scale: 0.95 }}
           >
             <FaEnvelope className="w-6 h-6" />
-            <Link href={`mailto:saikatroydot@gmail.com`}>saikatroydot@gmail.com</Link>
+            <Link href={`mailto:saikatroydot@gmail.com`}>
+              saikatroydot@gmail.com
+            </Link>
           </motion.div>
           <motion.div
             className="flex items-center space-x-4 text-white hover:text-accent transition-colors duration-300 origin-left"
@@ -98,7 +100,9 @@ const ContactUs: React.FC = () => {
             whileTap={{ scale: 0.95 }}
           >
             <FaGithub className="w-6 h-6" />
-            <Link href={'https://github.com/CyberSaikat'} target="_blank">github.com/example</Link>
+            <Link href={"https://github.com/CyberSaikat"} target="_blank">
+              github.com/CyberSaikat
+            </Link>
           </motion.div>
         </motion.div>
         <motion.div className="md:w-2/3" variants={itemVariants}>
