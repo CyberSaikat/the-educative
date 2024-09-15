@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Noto_Serif, Playfair_Display } from "next/font/google";
 import { ToastContainer } from "react-toastify";
 import NextAuthProvider from "@/provider/NextAuthProvider";
+import { Analytics } from "@vercel/analytics/react";
 
 import "@/assets/css/globals.css";
 import "react-toastify/dist/ReactToastify.css";
@@ -32,7 +33,7 @@ export const metadata: Metadata = {
       sizes: "16x16",
       type: "image/x-icon",
       url: "/favicon.ico",
-    }
+    },
   ],
   openGraph: {
     title: "The Educative | Best Place to Learn",
@@ -77,6 +78,7 @@ export default function RootLayout({
         <body className={`bg-primary text-white ${notoSerif.className}`}>
           <ToastContainer />
           {children}
+          <Analytics />
         </body>
       </html>
     </NextAuthProvider>
