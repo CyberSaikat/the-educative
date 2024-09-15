@@ -136,7 +136,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 > "Empowering growth through code: The Educative transforms learning into a journey of continuous discovery and mastery, leveraging modern tools and technologies to build the future of education."
 
 ```plaintext
-Made with ❤️ by The Educative
+Made with ❤️ by Saikat Roy
 ```
 
 ---
