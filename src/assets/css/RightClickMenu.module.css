@@ -1,0 +1,18 @@
+/* components/RightClickMenu.module.css */
+.menu {
+    position: fixed;
+    z-index: 1000;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 8px 0;
+}
+
+.menuItem {
+    padding: 8px 16px;
+    cursor: pointer;
+}
+
+.menuItem:hover {
+    background-color: #f0f0f0;
+}
