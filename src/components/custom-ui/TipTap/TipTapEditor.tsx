@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { useEditor, EditorContent, Editor, FloatingMenu } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
 import Paragraph from "@tiptap/extension-paragraph";
 import Heading from "@tiptap/extension-heading";
 import Link from "@tiptap/extension-link";
@@ -15,11 +14,17 @@ import Text from "@tiptap/extension-text";
 import History from "@tiptap/extension-history";
 import Bold from "@tiptap/extension-bold";
 import TextAlign from "@tiptap/extension-text-align";
+import Italic from "@tiptap/extension-italic";
+import Strike from '@tiptap/extension-strike';
+import Subscript from '@tiptap/extension-subscript';
+import Superscript from '@tiptap/extension-superscript';
+import Underline from '@tiptap/extension-underline';
+import TextStyle from '@tiptap/extension-text-style';
 import CodeBlock from "@tiptap/extension-code-block";
 import HorizontalRule from "@tiptap/extension-horizontal-rule";
 import { MenuBar } from "./menu";
+import FontFamily from "@tiptap/extension-font-family";
 import OrderedList from "@tiptap/extension-ordered-list";
-import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import { all, createLowlight } from "lowlight";
 import "@/assets/scss/tiptap.scss";
 import css from "highlight.js/lib/languages/css";
@@ -84,9 +89,40 @@ const Tiptap = ({
           class: "tiptap_text",
         },
       }),
+      TextStyle,
+      FontFamily.configure({
+        types: [
+          'textStyle',
+        ]
+      }),
       Bold.configure({
         HTMLAttributes: {
           class: "font-bold tiptap_bold",
+        },
+      }),
+      Italic.configure({
+        HTMLAttributes: {
+          class: "italic tiptap_italic",
+        },
+      }),
+      Underline.configure({
+        HTMLAttributes: {
+          class: "underline tiptap_underline",
+        },
+      }),
+      Strike.configure({
+        HTMLAttributes: {
+          class: "line-through tiptap_strike",
+        },
+      }),
+      Subscript.configure({
+        HTMLAttributes: {
+          class: "sub tiptap_sub",
+        },
+      }),
+      Superscript.configure({
+        HTMLAttributes: {
+          class: "super tiptap_super",
         },
       }),
       Blockquote.configure({

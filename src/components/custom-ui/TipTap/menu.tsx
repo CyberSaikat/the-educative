@@ -16,6 +16,11 @@ import {
   FaAlignRight,
   FaAlignJustify,
   FaTableCells,
+  FaTable,
+  FaStrikethrough,
+  FaSubscript,
+  FaSuperscript,
+  FaUnderline,
 } from "react-icons/fa6";
 import {
   BsTypeH1,
@@ -34,6 +39,13 @@ import {
 } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import { IoTrash } from "react-icons/io5";
+import { FcDeleteColumn, FcDeleteRow } from "react-icons/fc";
+import {
+  PiColumnsPlusLeft,
+  PiColumnsPlusRight,
+  PiRowsPlusBottom,
+  PiRowsPlusTopThin,
+} from "react-icons/pi";
 
 interface ToolbarButton {
   action: () => void;
@@ -42,6 +54,7 @@ interface ToolbarButton {
   label?: string;
   tooltipText: string;
 }
+
 export const MenuBar = ({
   editor,
   MenuType,
@@ -90,10 +103,34 @@ export const MenuBar = ({
           tooltipText: "Italic",
         },
         {
+          action: () => editor.chain().focus().toggleUnderline().run(),
+          isActive: () => editor.isActive("underline"),
+          icon: <FaUnderline />,
+          tooltipText: "Underline",
+        },
+        {
           action: () => editor.chain().focus().toggleBlockquote().run(),
           isActive: () => editor.isActive("blockquote"),
           icon: <FaQuoteLeft />,
           tooltipText: "Blockquote",
+        },
+        {
+          action: () => editor.chain().focus().toggleStrike().run(),
+          isActive: () => editor.isActive("strike"),
+          icon: <FaStrikethrough />,
+          tooltipText: "Strike Through",
+        },
+        {
+          action: () => editor.chain().focus().toggleSuperscript().run(),
+          isActive: () => editor.isActive("superscript"),
+          icon: <FaSuperscript />,
+          tooltipText: "Superscript",
+        },
+        {
+          action: () => editor.chain().focus().toggleSubscript().run(),
+          isActive: () => editor.isActive("subscript"),
+          icon: <FaSubscript />,
+          tooltipText: "Subscript",
         },
       ],
     },
@@ -256,25 +293,51 @@ export const MenuBar = ({
       showBubbleMenu: false,
       buttons: [
         {
-          action: () => {
-            const inputs = [
-              {
-                name: "rows",
-                label: "Number of Rows",
-                type: "number",
-                placeholder: "Enter rows",
-              },
-              {
-                name: "cols",
-                label: "Number of Columns",
-                type: "number",
-                placeholder: "Enter columns",
-              },
-            ];
-          },
+          action: () =>
+            editor
+              .chain()
+              .focus()
+              .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
+              .run(),
           isActive: () => editor.isActive("table"),
-          icon: <FaTableCells />,
+          icon: <FaTable />,
           tooltipText: "Insert Table",
+        },
+        {
+          action: () => editor.chain().focus().addColumnBefore().run(),
+          isActive: () => false,
+          icon: <PiColumnsPlusLeft />,
+          tooltipText: "Add Column Before",
+        },
+        {
+          action: () => editor.chain().focus().addColumnAfter().run(),
+          isActive: () => false,
+          icon: <PiColumnsPlusRight />,
+          tooltipText: "Add Column After",
+        },
+        {
+          action: () => editor.chain().focus().addRowBefore().run(),
+          isActive: () => false,
+          icon: <PiRowsPlusTopThin />,
+          tooltipText: "Add Row Before",
+        },
+        {
+          action: () => editor.chain().focus().addRowAfter().run(),
+          isActive: () => false,
+          icon: <PiRowsPlusBottom />,
+          tooltipText: "Add Row After",
+        },
+        {
+          action: () => editor.chain().focus().deleteColumn().run(),
+          isActive: () => false,
+          icon: <FcDeleteColumn />,
+          tooltipText: "Delete Current Column",
+        },
+        {
+          action: () => editor.chain().focus().deleteRow().run(),
+          isActive: () => false,
+          icon: <FcDeleteRow />,
+          tooltipText: "Delete Current Row",
         },
         {
           action: () => editor.chain().focus().deleteTable().run(),
@@ -365,11 +428,32 @@ export const MenuBar = ({
   return (
     <div className="flex flex-wrap gap-2 p-2 rounded-t-lg border border-b-0">
       {groups.map((group, groupIndex) => (
-        <div key={groupIndex} className="flex flex-col gap-1">
+        <div
+          key={groupIndex}
+          className={`flex flex-col gap-1 ${groups[groupIndex + 1] ? `border-r` : ""
+            } pr-2 border-primary`}
+        >
           <div className="text-xs font-semibold text-gray-700 tracking-wide text-center">
             {group.label}
           </div>
           <div className="flex flex-wrap gap-2 justify-center">
+            {group.label === "Text Formatting" && (
+              <div className={`flex gap-2`}>
+                <select
+                  className={`px-3 py-1 rounded border border-gray-300`}
+                  onChange={(e) => {
+                    editor.chain().focus().setFontFamily(e.target.value).run();
+                  }}
+                >
+                  <option value="Arial">Arial</option>
+                  <option value="Courier New">Courier New</option>
+                  <option value="Georgia">Georgia</option>
+                  <option value="Times New Roman">Times New Roman</option>
+                  <option value="Verdana">Verdana</option>
+                  <option value="Comic Sans MS">Comic Sans MS</option>
+                </select>
+              </div>
+            )}
             {group.buttons.map((button, buttonIndex) => (
               <div key={buttonIndex}>
                 <TooltipProvider>
@@ -382,7 +466,7 @@ export const MenuBar = ({
                         className={`px-3 py-1 rounded transition-colors ${
                           button.isActive()
                             ? "text-white"
-                            : "bg-white hover:bg-gray-200 text-accent"
+                          : "bg-white hover:bg-gray-200 text-info"
                         }`}
                       >
                         {button.icon}

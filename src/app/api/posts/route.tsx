@@ -311,7 +311,7 @@ export async function PUT(req: NextRequest) {
   const featuredImage = body.get("featuredImage");
   const imageCredit = body.get("imageCredit");
   const tagsString = tags.join(",");
-  const filteredTags = tagsString.split(",").map((tag) => tag.trim());
+  const filteredTags = tagsString.split(",").map((tag: string) => tag.trim());
   const status = body.get("status");
 
 
@@ -324,7 +324,6 @@ export async function PUT(req: NextRequest) {
       { status: 400 }
     );
   }
-  console.log("Content:", content);
 
   const session = await getServerSession(authOptions);
 
