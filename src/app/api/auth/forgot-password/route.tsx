@@ -8,7 +8,7 @@ export function GET() {
 }
 
 export async function POST(request: NextRequest) {
-  conn();
+  await conn();
 
   let host = request.headers.get("host");
   const protocol = request.headers.get("x-forwarded-proto") || "http";
