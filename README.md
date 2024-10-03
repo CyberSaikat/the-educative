@@ -1,8 +1,6 @@
 # 🎓 The Educative
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/CyberSaikat/the-educative/main/public/images/banner.png" alt="Leading Image" width="100%">
-</p>
+![Leading Image](https://raw.githubusercontent.com/CyberSaikat/the-educative/main/public/images/banner.png)
 
 **The Educative** is a cutting-edge educational platform designed to empower developers and computer science enthusiasts with advanced skills in modern web development. This project showcases a comprehensive range of features to support learning, collaboration, and professional growth using state-of-the-art technologies.
 
