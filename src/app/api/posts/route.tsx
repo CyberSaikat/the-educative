@@ -8,6 +8,8 @@ import Post from "@/models/Post";
 import path from "path";
 import fs from "fs";
 import { MongooseError } from "mongoose";
+import { firebaseStorage } from "@/database/firebase";
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 
 export async function GET(req: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -167,116 +169,44 @@ export async function POST(req: NextRequest) {
           { status: 404 }
         );
       } else {
-        if (id) {
-          const post = await Post.findOne({ _id: id });
-          if (!post) {
-            return NextResponse.json(
-              { status: "error", message: "Post not found" },
-              { status: 404 }
-            );
-          } else {
-            post.title = title;
-            post.content = content;
-            post.excerpt = excerpt;
-            post.author = author;
-            post.category = category;
-            post.subcategory = subcategory;
-            post.tags = filteredTags;
-            post.metaTitle = metaTitle;
-            post.metaDescription = metaDescription;
-            post.metaKeywords = metaKeywords;
-            post.status = status;
-            post.imageCredit = imageCredit;
+        const newPost = new Post({
+          title,
+          slug,
+          content,
+          excerpt,
+          author,
+          category,
+          subcategory,
+          tags: filteredTags,
+          metaTitle,
+          metaDescription,
+          metaKeywords,
+          featuredImage: "",
+          imageCredit,
+          status,
+        });
 
-            if (featuredImage instanceof File) {
-              const uploadDir = path.join(
-                process.cwd(),
-                "public",
-                "images",
-                "posts"
-              );
-              if (!fs.existsSync(uploadDir)) {
-                fs.mkdirSync(uploadDir, { recursive: true });
-              }
+        if (featuredImage instanceof File) {
+          const bucket = firebaseStorage;
+          const file = featuredImage;
+          const ext = file.type.split("/").pop();
+          const fileName = `the-educative/blog/post-${id}.${ext}`;
 
-              const file = featuredImage;
+          const spaceRef = ref(bucket, fileName);
 
-              const ext = file.type.split("/").pop();
+          const uploadTask = uploadBytesResumable(spaceRef, file);
 
-              const fileName = `post-${id}.${ext}`;
-
-              const filePath = path.join(uploadDir, fileName);
-
-              if (fs.existsSync(filePath)) {
-                fs.unlinkSync(filePath);
-              }
-
-              const buffer = Buffer.from(await file.arrayBuffer());
-
-              fs.writeFileSync(filePath, buffer);
-
-              const imagePath = `/images/posts/${fileName}`;
-              post.featuredImage = imagePath;
-            }
-            await post.save();
-            return NextResponse.json(
-              { message: "Post updated successfully" },
-              { status: 200 }
-            );
-          }
-        } else {
-          const newPost = new Post({
-            title,
-            slug,
-            content,
-            excerpt,
-            author,
-            category,
-            subcategory,
-            tags: filteredTags,
-            metaTitle,
-            metaDescription,
-            metaKeywords,
-            featuredImage: "",
-          });
-
-          if (featuredImage instanceof File) {
-            const uploadDir = path.join(
-              process.cwd(),
-              "public",
-              "images",
-              "posts"
-            );
-            if (!fs.existsSync(uploadDir)) {
-              fs.mkdirSync(uploadDir, { recursive: true });
-            }
-
-            const file = featuredImage;
-
-            const ext = file.type.split("/").pop();
-
-            const fileName = `post-${newPost._id}.${ext}`;
-
-            const filePath = path.join(uploadDir, fileName);
-
-            if (fs.existsSync(filePath)) {
-              fs.unlinkSync(filePath);
-            }
-
-            const buffer = Buffer.from(await file.arrayBuffer());
-
-            fs.writeFileSync(filePath, buffer);
-
-            const imagePath = `/images/posts/${fileName}`;
-            newPost.featuredImage = imagePath;
-          }
-
-          await newPost.save();
-          return NextResponse.json(
-            { message: "Post created successfully" },
-            { status: 201 }
-          );
+          await uploadTask;
+          
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+          newPost.featuredImage = downloadURL;
         }
+
+        await newPost.save();
+        return NextResponse.json(
+          { message: "Post created successfully" },
+          { status: 201 }
+        );
       }
     } catch (e: any) {
       if (e instanceof MongooseError) {
@@ -366,34 +296,19 @@ export async function PUT(req: NextRequest) {
             post.status = status;
 
             if (featuredImage instanceof File) {
-              const uploadDir = path.join(
-                process.cwd(),
-                "public",
-                "images",
-                "posts"
-              );
-              if (!fs.existsSync(uploadDir)) {
-                fs.mkdirSync(uploadDir, { recursive: true });
-              }
-
+              const bucket = firebaseStorage;
               const file = featuredImage;
-
               const ext = file.type.split("/").pop();
+              const fileName = `the-educative/blog/post-${id}.${ext}`;
 
-              const fileName = `post-${id}.${ext}`;
+              const spaceRef = ref(bucket, fileName);
 
-              const filePath = path.join(uploadDir, fileName);
+              const uploadTask = uploadBytesResumable(spaceRef, file);
 
-              if (fs.existsSync(filePath)) {
-                fs.unlinkSync(filePath);
-              }
-
-              const buffer = Buffer.from(await file.arrayBuffer());
-
-              fs.writeFileSync(filePath, buffer);
-
-              const imagePath = `/images/posts/${fileName}`;
-              post.featuredImage = imagePath;
+              await uploadTask;
+              
+              const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+              post.featuredImage = downloadURL;
             }
             await post.save();
             return NextResponse.json(
@@ -402,57 +317,9 @@ export async function PUT(req: NextRequest) {
             );
           }
         } else {
-          const newPost = new Post({
-            title,
-            slug,
-            content,
-            excerpt,
-            author,
-            category,
-            subcategory,
-            tags: filteredTags,
-            metaTitle,
-            metaDescription,
-            metaKeywords,
-            featuredImage: "",
-            imageCredit,
-          });
-
-          if (featuredImage instanceof File) {
-            const uploadDir = path.join(
-              process.cwd(),
-              "public",
-              "images",
-              "posts"
-            );
-            if (!fs.existsSync(uploadDir)) {
-              fs.mkdirSync(uploadDir, { recursive: true });
-            }
-
-            const file = featuredImage;
-
-            const ext = file.type.split("/").pop();
-
-            const fileName = `post-${newPost._id}.${ext}`;
-
-            const filePath = path.join(uploadDir, fileName);
-
-            if (fs.existsSync(filePath)) {
-              fs.unlinkSync(filePath);
-            }
-
-            const buffer = Buffer.from(await file.arrayBuffer());
-
-            fs.writeFileSync(filePath, buffer);
-
-            const imagePath = `/images/posts/${fileName}`;
-            newPost.featuredImage = imagePath;
-          }
-
-          await newPost.save();
           return NextResponse.json(
-            { message: "Post created successfully" },
-            { status: 201 }
+            { status: "error", message: "Invalid Post" },
+            { status: 400 }
           );
         }
       }
@@ -509,7 +376,6 @@ export async function DELETE(req: NextRequest) {
             { status: 404 }
           );
         } else {
-          await post.delete();
           return NextResponse.json(
             { message: "Post deleted successfully" },
             { status: 200 }
