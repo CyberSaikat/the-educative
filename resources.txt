@@ -1,0 +1,54 @@
+1. src\assets\images\2149126949.jpg
+https://www.freepik.com/free-photo/medium-shot-man-wearing-vr-glasses_19265130.htm#fromView=search&page=1&position=0&uuid=f03d23c7-98c4-4f7e-aa84-7215be8f5d4a
+
+2. src\assets\images\programming-background.jpg
+https://www.freepik.com/free-ai-image/programming-background-with-person-working-with-codes-computer_38669459.htm#fromView=search&page=1&position=20&uuid=f03d23c7-98c4-4f7e-aa84-7215be8f5d4a
+
+3. public\images\resources\online-courses-image.png
+https://www.freepik.com/free-photo/happy-teenage-girl-with-headphones-online-school_12228783.htm#fromView=search&page=1&position=20&uuid=320ae03e-6fd1-4651-adbe-81fba54d7368
+
+4. public\images\resources\development-tools-image.png
+https://www.freepik.com/free-photo/programming-background-collage_34089179.htm#fromView=search&page=1&position=18&uuid=a967df9c-577f-4752-bc3f-e332244e703c
+
+5. public\images\resources\coding-challenges-image.png
+https://www.freepik.com/free-photo/person-working-html-computer_36190655.htm#fromView=search&page=1&position=0&uuid=4e609bbd-c7b7-4c29-8306-116844c955f3
+
+6. public\images\resources\online-courses-image.png
+https://www.freepik.com/free-photo/people-working-html-codes_36190664.htm#fromView=search&page=2&position=1&uuid=051c31d2-56a5-481d-bcb4-525ea26fa2e8
+
+7. public\images\resources\interview-preparation-image.png
+https://www.freepik.com/free-photo/smiling-young-businesswoman-showing-contract-partner_3801756.htm#fromView=search&page=1&position=2&uuid=bc9e142c-e86c-4af5-a712-7b30aa6de829
+
+8. public\images\resources\networking-opportunities-image.png
+https://www.freepik.com/free-photo/hand-button-man-multimedia-mail_1150272.htm#fromView=search&page=1&position=0&uuid=01f69119-68e1-4050-bc3d-30efeb67ce89
+
+9. public\images\resources\cheat-sheets.png
+https://www.freepik.com/free-photo/ai-site-helping-with-software-production_41673046.htm#fromView=search&page=1&position=8&uuid=97a21e97-b0f1-4369-a46a-b26b8c0fdc22
+
+10. public\images\resources\tutorials-image.png
+https://www.freepik.com/free-photo/html-css-collage-concept-with-person_36295460.htm#fromView=search&page=1&position=12&uuid=edf01bf6-1bac-4bd1-bea3-6bd86f6d526c
+
+11. public\images\resources\articles-image.png
+https://www.freepik.com/free-photo/html-css-collage-concept-with-person_36295466.htm#fromView=search&page=1&position=0&uuid=9ab34604-0f62-4ee6-82a1-ab0b49f846a3
+
+12. public\images\resources\books-image.png
+https://www.freepik.com/free-vector/study-desk-concepts_762573.htm#fromView=search&page=1&position=1&uuid=81d2d4d3-8ddf-4640-9545-7f9f3b9fde54
+
+13. tutorials
+https://www.freepik.com/free-photo/focused-students-using-tablet-discussing-information_3079855.htm#fromView=search&page=1&position=33&uuid=74b7f1d6-6e22-4844-9647-7020dab1cffc
+
+14. articles
+https://www.freepik.com/free-photo/html-css-collage-concept-with-person_36295461.htm#fromView=search&page=1&position=21&uuid=a570808e-6113-46ee-a231-47e6caa33a01
+
+15. coding
+https://www.freepik.com/free-photo/rear-view-programmer-working-all-night-long_5698334.htm#fromView=search&page=1&position=2&uuid=e9e7b41a-5af2-4244-9791-2c10b95a6ebb
+
+16. coding challenges
+https://www.freepik.com/free-photo/close-up-man-writing-code-laptop_7621115.htm#fromView=search&page=1&position=22&uuid=e9e7b41a-5af2-4244-9791-2c10b95a6ebb
+https://www.freepik.com/free-photo/man-analysing-binary-code-virtual-screen_12196918.htm#fromView=search&page=1&position=51&uuid=e9e7b41a-5af2-4244-9791-2c10b95a6ebb
+
+17. networking
+https://www.freepik.com/free-photo/corporate-management-strategy-solution-branding-concept_28096443.htm#fromView=search&page=5&position=0&uuid=468085a7-bdfe-4e1e-b656-fa3ec6b913dc
+
+18. Blog image
+https://www.freepik.com/free-photo/html-css-collage-concept-with-person_36295459.htm#fromView=search&page=2&position=49&uuid=38e313c2-0565-4b90-9384-f50289a59bc3

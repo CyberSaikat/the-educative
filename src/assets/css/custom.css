@@ -1,0 +1,188 @@
+/* ===== Scrollbar CSS ===== */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--accent)) #ffffff;
+}
+
+html {
+    scroll-behavior: smooth !important;
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+    width: 4px;
+    height: 8px;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--accent));
+    border-radius: 5px;
+    border: 0px solid #ffffff;
+}
+
+::selection {
+    color: crimson;
+    text-shadow: 0 0 5px crimson;
+}
+
+.max-w-sm {
+    max-width: 24rem;
+}
+
+.max-w-md {
+    max-width: 28rem;
+}
+
+.max-w-lg {
+    max-width: 32rem;
+}
+
+.max-w-xl {
+    max-width: 36rem;
+}
+
+.max-w-2xl {
+    max-width: 42rem;
+}
+
+.max-w-3xl {
+    max-width: 48rem;
+}
+
+.max-w-4xl {
+    max-width: 56rem;
+}
+
+.max-w-5xl {
+    max-width: 64rem;
+}
+
+.max-w-6xl {
+    max-width: 72rem;
+}
+
+.max-w-full {
+    max-width: 100%;
+}
+
+.bg-accent {
+    background-color: hsl(var(--accent)) !important;
+}
+
+
+@media (max-width: 768px) {
+    main {
+        flex-direction: column;
+    }
+}
+
+.main-text {
+    fill: hsl(var(--accent));
+    font-family: "Russo One", sans-serif;
+    width: 205px;
+    height: 100%;
+}
+
+.main-text text {
+    animation: stroke 5s 1 alternate;
+    animation-delay: 1s;
+    stroke-width: 2;
+    stroke: hsl(--var(--accent));
+}
+
+@keyframes stroke {
+    0% {
+        fill: rgba(72, 138, 204, 0);
+        stroke: hsl(var(--accent));
+        stroke-dashoffset: 25%;
+        stroke-dasharray: 0 50%;
+        stroke-width: 2;
+    }
+
+    70% {
+        fill: rgba(72, 138, 204, 0);
+        stroke: hsl(var(--accent));
+    }
+
+    80% {
+        fill: rgba(72, 138, 204, 0);
+        stroke: hsl(var(--accent));
+        stroke-width: 3;
+    }
+
+    100% {
+        fill: hsl(var(--accent));
+        stroke: rgba(54, 95, 160, 0);
+        stroke-dashoffset: -25%;
+        stroke-dasharray: 50% 0;
+        stroke-width: 0;
+    }
+}
+
+.keen-slider__slide {
+    display: grid;
+    place-items: center;
+}
+
+.design {
+    position: relative;
+    padding: 10px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.design .design-child {
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+.design .design-child:nth-child(1)::after {
+    content: "";
+    z-index: 1;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, transparent 80%, hsl(var(--accent)));
+}
+
+.design .design-child:nth-child(1)::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 4px;
+    height: 80%;
+    background: linear-gradient(180deg, transparent, hsl(var(--accent)));
+}
+
+.design .design-child:nth-child(2)::after {
+    content: "";
+    z-index: 3;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: calc(100% - 4px);
+    height: 4px;
+    background: linear-gradient(270deg, transparent 80%, hsl(var(--accent)));
+}
+
+.design .design-child:nth-child(2)::before {
+    content: "";
+    z-index: 4;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 80%;
+    background: linear-gradient(360deg, transparent, hsl(var(--accent)));
+}
+
+.bg-clip-text {
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    background-clip: text;
+}

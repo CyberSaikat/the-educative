@@ -1,0 +1,46 @@
+$white : #fff;
+$accent: hsl(153, 44%, 55%);
+$accent-hover: hsl(153, 44%, 45%);
+
+
+.custom-title {
+    position: relative;
+    &::after {
+        content: "";
+        position: absolute;
+        bottom: -3px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-color: $accent;
+        z-index: -1;
+    }
+
+    &::before {
+        content: "";
+        position: absolute;
+        bottom: -6px;
+        left: 0;
+        width: 8px;
+        height: 8px;
+        background: $white;
+        border-radius: 50%;
+        animation: traverse 5s infinite ease-in-out;
+    }
+}
+
+@keyframes traverse {
+    0% {
+        left: 0;
+    }
+    50% {
+        left: 100%;
+    }
+}
+
+.horizontal_rule {
+    border: none;
+    height: 1px;
+    background: linear-gradient(to right, transparent, hsl(var(--accent)), transparent);
+    margin: 2rem 0;
+  }
