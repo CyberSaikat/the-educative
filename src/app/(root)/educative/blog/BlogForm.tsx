@@ -71,8 +71,8 @@ export default function BlogForm({
   }, [iPost?.category]);
 
   function fetchInitials() {
-    if(!iPost?.category) return;
-    
+    if (!iPost?.category) return;
+
     setLoading(true);
     axios
       .get(`/api/categories/${iPost.category}`)
@@ -86,6 +86,10 @@ export default function BlogForm({
         toastMsg("error", e.message);
       });
 
+    fetchTagsData();
+  }
+
+  function fetchTagsData() {
     axios
       .get(`/api/tags`)
       .then((res) => {
@@ -151,11 +155,11 @@ export default function BlogForm({
 
     const request = blog
       ? axios.put(`/api/posts`, formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        })
+        headers: { "Content-Type": "multipart/form-data" },
+      })
       : axios.post(`/api/posts`, formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
     request
       .then((res) => {
@@ -209,7 +213,7 @@ export default function BlogForm({
               id={"slug"}
               required={true}
               value={iPost?.slug}
-              onchange={() => {}}
+              onchange={() => { }}
             />
           </div>
           <div className="col-span-1">
