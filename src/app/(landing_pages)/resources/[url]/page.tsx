@@ -77,8 +77,8 @@ export default async function Page({ params }: { params: { url: string } }) {
   const contents = data.contents;
   const breadcrumbItems = [
     { label: "Home", href: "/" },
-    { label: "Resource", href: "/resource" },
-    { label: data.name, href: `/resource/${data.url}` },
+    { label: "Resource", href: "/resources" },
+    { label: data.name, href: `/resources/${data.url}` },
   ];
 
   const other = await Resources.aggregate([
