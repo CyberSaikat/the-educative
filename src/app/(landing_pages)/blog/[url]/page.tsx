@@ -273,8 +273,8 @@ export default async function Page({ params }: PageProps) {
                     src={data.featuredImage}
                     alt={data.title}
                     className="w-full object-center"
-                    width={1200}
-                    height={640}
+                    width={1800}
+                    height={900}
                     priority={true}
                   />
                 ) : null}
