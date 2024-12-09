@@ -190,7 +190,7 @@ export async function POST(req: NextRequest) {
           const bucket = firebaseStorage;
           const file = featuredImage;
           const ext = file.type.split("/").pop();
-          const fileName = `the-educative/blog/post-${id}.${ext}`;
+          const fileName = `the-educative/blog/post-${Math.random() * 100000000000}.${ext}`;
 
           const spaceRef = ref(bucket, fileName);
 
