@@ -16,6 +16,7 @@ import CommentSection from "./CommentSection";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/options";
 import { CustomUser } from "@/abstract/type";
+import mongoose from "mongoose";
 
 interface PageProps {
   params: {
@@ -78,6 +79,8 @@ export default async function Page({ params }: PageProps) {
   const { url } = params;
 
   await conn();
+  mongoose.set('bufferCommands', false);
+  mongoose.connection.set('serverSelectionTimeoutMS', 30000);
 
   const session = await getServerSession(authOptions);
   const user = session?.user as CustomUser;
@@ -127,9 +130,7 @@ export default async function Page({ params }: PageProps) {
         content: 1,
         excerpt: 1,
         author: 1,
-        publish_date: {
-          $dateToString: { format: "%d-%m-%Y", date: "$publish_date" },
-        },
+        publish_date: 1,
         category: { $ifNull: ["$category.name", null] },
         subcategory: { $ifNull: ["$subcategory.name", null] },
         tags: {
@@ -216,9 +217,7 @@ export default async function Page({ params }: PageProps) {
         content: 1,
         excerpt: 1,
         author: 1,
-        publish_date: {
-          $dateToString: { format: "%d-%m-%Y", date: "$publish_date" },
-        },
+        publish_date: 1,
         category: { $ifNull: ["$category.name", null] },
         subcategory: { $ifNull: ["$subcategory.name", null] },
         tags: {

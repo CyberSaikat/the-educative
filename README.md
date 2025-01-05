@@ -10,14 +10,20 @@
 [![GitHub Issues](https://img.shields.io/github/issues/CyberSaikat/the-educative.svg)](https://github.com/CyberSaikat/the-educative/issues)
 
 ## 📚 Table of Contents
-- [Project Overview](#-project-overview)
-- [Key Features](#-key-features)
-- [Technologies Used](#%EF%B8%8F-technologies-used)
-- [Getting Started](#-getting-started)
-- [Contributing](#-contributing)
-- [Roadmap](#-roadmap)
-- [License](#-license)
-- [Contact](#-contact)
+- [🎓 The Educative](#-the-educative)
+  - [📚 Table of Contents](#-table-of-contents)
+  - [🌟 Project Overview](#-project-overview)
+  - [🚀 Key Features](#-key-features)
+    - [📋 Learning Resources](#-learning-resources)
+    - [💻 Coding \& Development](#-coding--development)
+    - [🤝 Community \& Collaboration](#-community--collaboration)
+    - [🛠 Tools \& Resources](#-tools--resources)
+  - [⚙️ Technologies Used](#️-technologies-used)
+  - [🚀 Getting Started](#-getting-started)
+  - [🤝 Contributing](#-contributing)
+  - [🗺 Roadmap](#-roadmap)
+  - [📄 License](#-license)
+  - [📞 Contact](#-contact)
 
 ## 🌟 Project Overview
 
@@ -134,7 +140,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 > "Empowering growth through code: The Educative transforms learning into a journey of continuous discovery and mastery, leveraging modern tools and technologies to build the future of education."
 
 ```plaintext
-Made with ❤️ by Saikat Roy
+Designed & Developed by Saikat Roy
 ```
 
 ---

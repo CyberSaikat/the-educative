@@ -7,7 +7,7 @@ import User from "@/models/user";
 import Post from "@/models/Post";
 import path from "path";
 import fs from "fs";
-import { MongooseError } from "mongoose";
+import mongoose, { MongooseError } from "mongoose";
 import { firebaseStorage } from "@/database/firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 
@@ -23,6 +23,8 @@ export async function GET(req: NextRequest) {
     try {
       const user = session.user as CustomUser;
       await conn();
+      mongoose.set('bufferCommands', false);
+      mongoose.connection.set('serverSelectionTimeoutMS', 30000);
       const currentUser = await User.findOne({ _id: user._id });
 
       if (!currentUser) {
@@ -190,7 +192,7 @@ export async function POST(req: NextRequest) {
           const bucket = firebaseStorage;
           const file = featuredImage;
           const ext = file.type.split("/").pop();
-          const fileName = `the-educative/blog/post-${Math.random() * 100000000000}.${ext}`;
+          const fileName = `the-educative/blog/post-${(Math.random() * 100000000000).toFixed(0)}.${ext}`;
 
           const spaceRef = ref(bucket, fileName);
 

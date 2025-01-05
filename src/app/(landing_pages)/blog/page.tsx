@@ -1,20 +1,21 @@
-import React from "react";
-import { StyleSix } from "@/components/custom-ui/CustomTitle";
 import conn from "@/database/config";
 import { Metadata } from "next";
-import LazyImage from "@/components/custom-ui/LazyImage";
 import Post from "@/models/Post";
-import { IPost } from "@/abstract/interface";
+import LazyImage from "@/components/custom-ui/LazyImage";
+import { StyleSix } from "@/components/custom-ui/CustomTitle";
 import BlogPostCard from "./BlogPostCard";
+import { IPost } from "@/abstract/interface";
+import mongoose from "mongoose";
 
 export const metadata: Metadata = {
   title: "Blog | The Educative",
   description:
     "Explore our latest articles on technology, programming, and education. Stay updated with industry trends and expert insights.",
 };
-
 const BlogPage = async () => {
   await conn();
+  mongoose.set('bufferCommands', false);
+  mongoose.connection.set('serverSelectionTimeoutMS', 30000);
   const posts = await Post.aggregate([
     {
       $match: {
