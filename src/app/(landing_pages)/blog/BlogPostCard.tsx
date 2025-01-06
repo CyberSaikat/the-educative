@@ -17,8 +17,8 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
     excerpt,
     author,
     publish_date,
-    category,
-    tags,
+    categoryName,
+    tagNames,
     featuredImage,
   } = post;
 
@@ -31,7 +31,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl group">
+    <div className="bg-white rounded-lg shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl group mb-5">
       <Link href={`/blog/${slug}`}>
         <div className="relative w-full overflow-hidden">
           <LazyImage
@@ -41,9 +41,9 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
             width={600}
             height={300}
           />
-          {category && (
-            <span className="absolute top-4 left-4 bg-primary text-white px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide shadow-md">
-              {category}
+          {categoryName && (
+            <span className="absolute top-2 right-2 bg-primary text-white px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide shadow-md">
+              {categoryName}
             </span>
           )}
         </div>
@@ -69,9 +69,9 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
             <span>{calculateReadTime(excerpt || "")}</span>
           </div>
         </div>
-        {tags && tags.length > 0 && (
+        {tagNames && tagNames.length > 0 && (
           <div className="flex flex-wrap gap-2">
-            {tags.slice(0, 3).map((tag, index) => (
+            {tagNames.slice(0, 3).map((tag, index) => (
               <span
                 key={index}
                 className="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-xs font-medium hover:bg-primary hover:text-white transition-colors duration-300"

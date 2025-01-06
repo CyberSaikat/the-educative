@@ -5,119 +5,117 @@ import { CustomUser } from "@/abstract/type";
 import conn from "@/database/config";
 import User from "@/models/user";
 import Post from "@/models/Post";
-import path from "path";
-import fs from "fs";
 import mongoose, { MongooseError } from "mongoose";
 import { firebaseStorage } from "@/database/firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 
 export async function GET(req: NextRequest) {
-  const session = await getServerSession(authOptions);
 
-  if (!session) {
+  try {
+    mongoose.set('bufferCommands', false);
+    mongoose.connection.set('serverSelectionTimeoutMS', 30000);
+    await conn();
+
+    const { searchParams } = new URL(req.url);
+    const page = parseInt(searchParams.get("page") || "1", 10);
+    const limit = parseInt(searchParams.get("limit") || "6", 10);
+    const skip = (page - 1) * limit;
+
+    let filters: mongoose.PipelineStage[] = [
+      {
+        $match: {
+          status: "published",
+        },
+      },
+      {
+        $sort: { publish_date: -1 },
+      },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "category",
+          foreignField: "_id",
+          as: "category",
+        },
+      },
+      {
+        $unwind: {
+          path: "$category",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: "subcategories",
+          localField: "subcategory",
+          foreignField: "_id",
+          as: "subcategory",
+        },
+      },
+      {
+        $unwind: {
+          path: "$subcategory",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: "tags",
+          localField: "tags",
+          foreignField: "_id",
+          as: "tags",
+        },
+      },
+      {
+        $project: {
+          title: 1,
+          slug: 1,
+          content: 1,
+          excerpt: 1,
+          author: 1,
+          category: { $ifNull: ["$category._id", null] },
+          subcategory: { $ifNull: ["$subcategory._id", null] },
+          tags: {
+            $map: {
+              input: "$tags",
+              as: "tag",
+              in: "$$tag._id",
+            },
+          },
+          publish_date: {
+            $dateToString: { format: "%d-%m-%Y", date: "$publish_date" },
+          },
+          categoryName: { $ifNull: ["$category.name", null] },
+          subcategoryName: { $ifNull: ["$subcategory.name", null] },
+          tagNames: {
+            $map: {
+              input: "$tags",
+              as: "tag",
+              in: "$$tag.name",
+            },
+          },
+          metaTitle: 1,
+          metaDescription: 1,
+          metaKeywords: 1,
+          featuredImage: 1,
+          imageCredit: 1,
+          status: 1,
+          updated_date: 1,
+        },
+      },
+      { $skip: skip },
+      { $limit: limit },
+    ];
+    const posts = await Post.aggregate(filters);
+    const totalPosts = await Post.countDocuments({ status: "published" });
+    const totalPages = Math.ceil(totalPosts / limit);
+
+    return NextResponse.json({ posts, totalPages }, { status: 200 });
+  } catch (e: any) {
     return NextResponse.json(
-      { status: "error", message: "Unauthorized" },
-      { status: 401 }
+      { status: "error", message: e.message },
+      { status: 500 }
     );
-  } else {
-    try {
-      const user = session.user as CustomUser;
-      await conn();
-      mongoose.set('bufferCommands', false);
-      mongoose.connection.set('serverSelectionTimeoutMS', 30000);
-      const currentUser = await User.findOne({ _id: user._id });
-
-      if (!currentUser) {
-        return NextResponse.json(
-          { status: "error", message: "User not found" },
-          { status: 404 }
-        );
-      } else {
-        const posts = await Post.aggregate([
-          {
-            $lookup: {
-              from: "categories",
-              localField: "category",
-              foreignField: "_id",
-              as: "category",
-            },
-          },
-          {
-            $unwind: {
-              path: "$category",
-              preserveNullAndEmptyArrays: true,
-            },
-          },
-          {
-            $lookup: {
-              from: "subcategories",
-              localField: "subcategory",
-              foreignField: "_id",
-              as: "subcategory",
-            },
-          },
-          {
-            $unwind: {
-              path: "$subcategory",
-              preserveNullAndEmptyArrays: true,
-            },
-          },
-          {
-            $lookup: {
-              from: "tags",
-              localField: "tags",
-              foreignField: "_id",
-              as: "tags",
-            },
-          },
-          {
-            $project: {
-              title: 1,
-              slug: 1,
-              content: 1,
-              excerpt: 1,
-              author: 1,
-              category: { $ifNull: ["$category._id", null] },
-              subcategory: { $ifNull: ["$subcategory._id", null] },
-              tags: {
-                $map: {
-                  input: "$tags",
-                  as: "tag",
-                  in: "$$tag._id",
-                },
-              },
-              publish_date: {
-                $dateToString: { format: "%d-%m-%Y", date: "$publish_date" },
-              },
-              categoryName: { $ifNull: ["$category.name", null] },
-              subcategoryName: { $ifNull: ["$subcategory.name", null] },
-              tagNames: {
-                $map: {
-                  input: "$tags",
-                  as: "tag",
-                  in: "$$tag.name",
-                },
-              },
-              metaTitle: 1,
-              metaDescription: 1,
-              metaKeywords: 1,
-              featuredImage: 1,
-              imageCredit: 1,
-              status: 1,
-              updated_date: 1,
-            },
-          },
-        ]);
-
-
-        return NextResponse.json({ posts: posts }, { status: 200 });
-      }
-    } catch (e: any) {
-      return NextResponse.json(
-        { status: "error", message: e.message },
-        { status: 500 }
-      );
-    }
   }
 }
 
@@ -199,7 +197,7 @@ export async function POST(req: NextRequest) {
           const uploadTask = uploadBytesResumable(spaceRef, file);
 
           await uploadTask;
-          
+
           const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
           newPost.featuredImage = downloadURL;
         }
@@ -308,7 +306,7 @@ export async function PUT(req: NextRequest) {
               const uploadTask = uploadBytesResumable(spaceRef, file);
 
               await uploadTask;
-              
+
               const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
               post.featuredImage = downloadURL;
             }

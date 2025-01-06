@@ -1,99 +1,55 @@
-import conn from "@/database/config";
-import { Metadata } from "next";
-import Post from "@/models/Post";
+"use client";
+
+import { useEffect, useState } from "react";
 import LazyImage from "@/components/custom-ui/LazyImage";
 import { StyleSix } from "@/components/custom-ui/CustomTitle";
 import BlogPostCard from "./BlogPostCard";
 import { IPost } from "@/abstract/interface";
-import mongoose from "mongoose";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import Masonry from "react-masonry-css";
+import axios from "axios";
 
-export const metadata: Metadata = {
-  title: "Blog | The Educative",
-  description:
-    "Explore our latest articles on technology, programming, and education. Stay updated with industry trends and expert insights.",
-};
-const BlogPage = async () => {
-  await conn();
-  mongoose.set('bufferCommands', false);
-  mongoose.connection.set('serverSelectionTimeoutMS', 30000);
-  const posts = await Post.aggregate([
-    {
-      $match: {
-        status: "published",
-      },
-    },
-    {
-      $sort: { publish_date: -1 },
-    },
-    {
-      $limit: 9,
-    },
-    {
-      $lookup: {
-        from: "categories",
-        localField: "category",
-        foreignField: "_id",
-        as: "category",
-      },
-    },
-    {
-      $unwind: {
-        path: "$category",
-        preserveNullAndEmptyArrays: true,
-      },
-    },
-    {
-      $lookup: {
-        from: "subcategories",
-        localField: "subcategory",
-        foreignField: "_id",
-        as: "subcategory",
-      },
-    },
-    {
-      $unwind: {
-        path: "$subcategory",
-        preserveNullAndEmptyArrays: true,
-      },
-    },
-    {
-      $lookup: {
-        from: "tags",
-        localField: "tags",
-        foreignField: "_id",
-        as: "tags",
-      },
-    },
-    {
-      $project: {
-        title: 1,
-        slug: 1,
-        content: 1,
-        excerpt: 1,
-        author: 1,
-        publish_date: {
-          $dateToString: { format: "%d-%m-%Y", date: "$publish_date" },
-        },
-        category: { $ifNull: ["$category.name", null] },
-        subcategory: { $ifNull: ["$subcategory.name", null] },
-        tags: {
-          $map: {
-            input: "$tags",
-            as: "tag",
-            in: "$$tag.name",
-          },
-        },
-        metaTitle: 1,
-        metaDescription: 1,
-        metaKeywords: 1,
-        featuredImage: 1,
-        imageCredit: 1,
-        status: 1,
-        updated_date: 1,
-      },
-    },
-  ]);
-  const blogPosts = JSON.parse(JSON.stringify(posts));
+const BlogPage = () => {
+  const [blogPosts, setBlogPosts] = useState<IPost[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [loading, setLoading] = useState(false); // Add loading state
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get(`/api/posts`, {
+          params: { page: currentPage, limit: 9 }
+        });
+        const data = response.data;
+        router.push(`/blog?page=${currentPage}`);
+        setBlogPosts(data.posts);
+        setTotalPages(data.totalPages);
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPosts();
+  }, [currentPage]);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
   return (
     <section className="relative">
       <div className="container py-5">
@@ -155,14 +111,73 @@ const BlogPage = async () => {
         <div
           className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 mt-10"
           id="blog-posts"
-        >
-          <StyleSix title="Latest Posts" className="!text-4xl font-bold" />
-        </div>
+        ></div>
+        <StyleSix title="Latest Posts" className="!text-4xl font-bold" />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-10 pt-5">
-          {blogPosts.map((post: IPost) => (
-            <BlogPostCard key={post._id} post={post} />
-          ))}
+      </div>
+
+      <div className="container">
+        {loading ? ( // Show skeleton effect when loading
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-10 pt-5">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <div key={index} className="animate-pulse">
+                <div className="bg-gray-300 h-48 mb-4 rounded"></div>
+                <div className="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
+                <div className="h-4 bg-gray-300 rounded w-1/2"></div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <Masonry
+            breakpointCols={{ default: 3, 1100: 2, 700: 1 }}
+            className="flex w-auto gap-5"
+            columnClassName="masonry-grid_column"
+          >
+              {blogPosts.map((post: IPost) => (
+                <BlogPostCard key={post._id} post={post} />
+              ))}
+          </Masonry>
+        )}
+
+        <div className="mt-10 flex justify-between">
+          <div className="text-gray-500 text-sm">
+            Showing {currentPage} of {totalPages} pages
+          </div>
+          <div className="gap-2 inline-flex">
+            {
+              currentPage !== 1 && (
+                <>
+                  <Button
+                    variant={'default'}
+                    onClick={handlePrevPage}
+                  >
+                    Previous
+                  </Button>
+
+                  <Button variant={'outline'}
+                    onClick={() => setCurrentPage(currentPage - 1)}
+                  >{currentPage - 1}</Button>
+                </>
+              )
+            }
+            <Button variant={'default'}>{currentPage}</Button>
+
+            {
+              currentPage !== totalPages && (
+                <>
+                  <Button variant={'outline'}
+                    onClick={() => setCurrentPage(currentPage + 1)}
+                  >{currentPage + 1}</Button>
+                  <Button
+                    variant={'default'}
+                    onClick={handleNextPage}
+                  >
+                    Next
+                  </Button>
+                </>
+              )
+            }
+          </div>
         </div>
       </div>
     </section>

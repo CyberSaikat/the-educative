@@ -143,8 +143,11 @@ export interface IPost {
   updated_date: Date;
   status: "draft" | "published" | "archived";
   category: string;
+  categoryName?: string;
   subcategory: string;
+  subcategoryName?: string;
   tags: string[];
+  tagNames?: string[];
   metaTitle: string;
   metaDescription: string;
   metaKeywords: string;

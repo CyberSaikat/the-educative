@@ -101,6 +101,7 @@
     "react-hook-form": "^7.51.5",
     "react-icons": "^5.2.1",
     "react-image-crop": "^11.0.6",
+    "react-masonry-css": "^1.0.16",
     "react-remove-scroll": "^2.5.10",
     "react-table": "^7.8.0",
     "react-toastify": "^10.0.5",

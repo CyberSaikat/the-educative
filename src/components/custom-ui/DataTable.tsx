@@ -3,6 +3,8 @@ import { FaUserEdit, FaTrash, FaTh, FaTable } from "react-icons/fa";
 import { Button } from "../ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { Switch } from "../ui/switch";
+import { AlertDialog } from "../ui/alert-dialog";
+import Loading from "./Loading";
 
 type Column = {
   label: string;
@@ -13,11 +15,13 @@ type Column = {
 
 type DataTableProps = {
   columns: Column[];
-  data: any[];
+  data?: any[];
   onEdit: (item: any) => void;
   onDelete: (id: string) => void;
   itemPerPage?: number;
   visibilitySwitch?: (item: any) => void;
+  serverSide?: boolean;
+  url?: string;
 };
 
 const DataTable: React.FC<DataTableProps> = ({
@@ -26,12 +30,36 @@ const DataTable: React.FC<DataTableProps> = ({
   onEdit,
   onDelete,
   itemPerPage = 10,
+  serverSide = false,
   visibilitySwitch,
+  url,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredData, setFilteredData] = useState<any[]>([]);
+  const [totalPages, setTotalPages] = useState(0);
   const [viewMode, setViewMode] = useState<"table" | "grid">("table");
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      if (url) {
+        setLoading(true);
+        const response = await fetch(`${url}?page=${currentPage}&limit=${itemPerPage}`);
+        const data = await response.json();
+        setFilteredData(data.posts);
+        setTotalPages(data.totalPages);
+        setLoading(false);
+      }
+    };
+
+    if (serverSide) {
+      fetchPosts();
+    } else if (data) {
+      setFilteredData(data);
+      setTotalPages(Math.ceil(data.length / itemPerPage));
+    }
+  }, [serverSide, data, currentPage]);
 
   useEffect(() => {
     if (!data) return;
@@ -49,11 +77,12 @@ const DataTable: React.FC<DataTableProps> = ({
 
   const indexOfLastItem = currentPage * itemPerPage;
   const indexOfFirstItem = indexOfLastItem - itemPerPage;
-  const currentData = filteredData.slice(indexOfFirstItem, indexOfLastItem);
+  let currentData = filteredData.slice(indexOfFirstItem, indexOfLastItem);
+  if (serverSide) {
+    currentData = filteredData;
+  }
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
-
-  const totalPages = Math.ceil(filteredData.length / itemPerPage);
 
   const calculateDelay = (index: number) => {
     const baseDelay = 0.1; // Base delay in seconds
@@ -266,6 +295,14 @@ const DataTable: React.FC<DataTableProps> = ({
     </motion.div>
   );
 
+  if (serverSide && !url) {
+    return (
+      <div className="flex justify-center items-center bg-red-400 text-white p-4 rounded-md">
+        <p>URL is required for server side pagination</p>
+      </div>
+    )
+  }
+
   return (
     <>
       <div className="flex justify-between items-center mb-3">
@@ -278,21 +315,19 @@ const DataTable: React.FC<DataTableProps> = ({
         />
         <div className="flex items-center gap-2 ml-4">
           <Button
-            className={`px-4 py-2 border rounded-md ${
-              viewMode === "table"
-                ? "bg-primary text-white hover:bg-accent"
-                : "bg-white text-gray-800"
-            }`}
+            className={`px-4 py-2 border rounded-md ${viewMode === "table"
+              ? "bg-primary text-white hover:bg-accent"
+              : "bg-white text-gray-800"
+              }`}
             onClick={() => setViewMode("table")}
           >
             <FaTable />
           </Button>
           <Button
-            className={`px-4 py-2 border rounded-md ${
-              viewMode === "grid"
-                ? "bg-primary text-white hover:bg-accent"
-                : "bg-white text-gray-800"
-            }`}
+            className={`px-4 py-2 border rounded-md ${viewMode === "grid"
+              ? "bg-primary text-white hover:bg-accent"
+              : "bg-white text-gray-800"
+              }`}
             onClick={() => setViewMode("grid")}
           >
             <FaTh />
@@ -300,85 +335,90 @@ const DataTable: React.FC<DataTableProps> = ({
         </div>
       </div>
 
-      <AnimatePresence mode="popLayout">
-        {viewMode === "table" ? (
-          <motion.div
-            key="table"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <div id="userTable" className="overflow-auto">
-              <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 z-20 overflow-auto">
-                <thead className="text-xs text-white uppercase bg-primary dark:bg-gray-700 dark:text-gray-400">
-                  <tr>
-                    <th className="py-3 px-4 border-r relative text-nowrap">
-                      Sl No.
-                    </th>
-                    {columns.map((column) => (
-                      <th
-                        key={column.label}
-                        className={`py-3 px-4 border-r relative text-nowrap ${
-                          column.sortable ? "cursor-pointer" : ""
-                        }`}
-                      >
-                        {column.label}
-                      </th>
-                    ))}
-                    {/* {visibilitySwitch ? (
-                      <th className="py-3 px-4 border-r relative text-nowrap">
-                        Visibility
-                      </th>
-                    ) : null} */}
-                    <th className="py-3 px-4 border-r relative text-nowrap">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                {currentData?.length > 0 ? (
-                  renderTableContent()
-                ) : (
-                  <tbody>
-                    <tr>
-                      <td
-                        colSpan={columns.length + 2}
-                        className="text-center py-4"
-                      >
-                        No data found
-                      </td>
-                    </tr>
-                  </tbody>
-                )}
-              </table>
-            </div>
-          </motion.div>
-        ) : (
-          <motion.div
-            key="grid"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            {currentData?.length > 0 ? (
-              renderGridContent()
+      {loading ? (
+        <div className="flex justify-center items-center">
+          <Loading HeightIcon="80px" WidthIcon="80px" />
+        </div>
+      ) : (
+          <AnimatePresence mode="popLayout">
+            {viewMode === "table" ? (
+              <motion.div
+                key="table"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <div id="userTable" className="overflow-auto">
+                  <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 z-20 overflow-auto">
+                    <thead className="text-xs text-white uppercase bg-primary dark:bg-gray-700 dark:text-gray-400">
+                      <tr>
+                        <th className="py-3 px-4 border-r relative text-nowrap">
+                          Sl No.
+                        </th>
+                        {columns.map((column) => (
+                          <th
+                            key={column.label}
+                            className={`py-3 px-4 border-r relative text-nowrap ${column.sortable ? "cursor-pointer" : ""
+                              }`}
+                          >
+                            {column.label}
+                          </th>
+                        ))}
+                        {/* {visibilitySwitch ? (
+                        <th className="py-3 px-4 border-r relative text-nowrap">
+                          Visibility
+                        </th>
+                      ) : null} */}
+                        <th className="py-3 px-4 border-r relative text-nowrap">
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
+                    {currentData?.length > 0 ? (
+                      renderTableContent()
+                    ) : (
+                      <tbody>
+                        <tr>
+                          <td
+                            colSpan={columns.length + 2}
+                            className="text-center py-4"
+                          >
+                            No data found
+                          </td>
+                        </tr>
+                      </tbody>
+                    )}
+                  </table>
+                </div>
+              </motion.div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                <div className="bg-white border rounded-md p-4 shadow-md dark:bg-gray-800 dark:border-gray-700">
-                  <div className="flex flex-col gap-2">
-                    <div className="flex justify-between">
-                      <span className="font-semibold pr-2 inline-block">
-                        No data found
-                      </span>
+              <motion.div
+                key="grid"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                {currentData?.length > 0 ? (
+                  renderGridContent()
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <div className="bg-white border rounded-md p-4 shadow-md dark:bg-gray-800 dark:border-gray-700">
+                      <div className="flex flex-col gap-2">
+                        <div className="flex justify-between">
+                          <span className="font-semibold pr-2 inline-block">
+                            No data found
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
+                )}
+              </motion.div>
             )}
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </AnimatePresence>
+      )}
 
       <div className="flex justify-between items-center mt-4">
         <div></div>
@@ -388,11 +428,10 @@ const DataTable: React.FC<DataTableProps> = ({
               {Array.from({ length: totalPages }, (_, index) => (
                 <li key={index + 1}>
                   <Button
-                    className={`px-4 py-2 border rounded-md ${
-                      index + 1 === currentPage
-                        ? "bg-primary text-white hover:bg-accent"
-                        : "bg-white text-gray-800"
-                    }`}
+                    className={`px-4 py-2 border rounded-md ${index + 1 === currentPage
+                      ? "bg-primary text-white hover:bg-accent"
+                      : "bg-white text-gray-800"
+                      }`}
                     onClick={() => paginate(index + 1)}
                   >
                     {index + 1}

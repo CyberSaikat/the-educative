@@ -21,7 +21,7 @@ export default function Blog() {
   useEffect(() => {
     setLoading(true);
     axios
-      .get("/api/posts")
+      .get("/api/posts?limit=100")
       .then((res) => {
         setPosts(res.data.posts);
       })
@@ -77,6 +77,8 @@ export default function Blog() {
         </CardHeader>
         <CardContent>
           <DataTable
+            serverSide={true}
+            url="/api/posts"
             columns={[
               { label: "Name", render: (r: any) => r.title, name: "title" },
               {
@@ -109,7 +111,6 @@ export default function Blog() {
                 name: "view",
               },
             ]}
-            data={posts}
             onEdit={function (item: any): void {
               setCurrentPost(item);
               setOpen(true);
