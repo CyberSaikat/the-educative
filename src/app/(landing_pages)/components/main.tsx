@@ -1,8 +1,10 @@
 import LogoCarousel from "@/components/logos/LogoCarousel";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function MainSec() {
+  const router = useRouter();
   return (
     <>
       <main className="container">
@@ -24,7 +26,11 @@ export default function MainSec() {
               >
                 Get Started
               </Link>
-              <Button className="ml-4 bg-primary ring-1 ring-accent shadow-md shadow-accent hover:bg-accent transition-all duration-500 ease-in-out text-[16px] xl:text-[20px] p-4">
+              <Button className="ml-4 bg-primary ring-1 ring-accent shadow-md shadow-accent hover:bg-accent transition-all duration-500 ease-in-out text-[16px] xl:text-[20px] p-4"
+                onClick={() => {
+                  router.push("/blog");
+                }}
+              >
                 Learn More
               </Button>
             </div>

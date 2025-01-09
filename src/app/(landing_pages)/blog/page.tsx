@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { cache, useEffect, useState } from "react";
 import LazyImage from "@/components/custom-ui/LazyImage";
 import { StyleSix } from "@/components/custom-ui/CustomTitle";
 import BlogPostCard from "./BlogPostCard";
@@ -22,7 +22,10 @@ const BlogPage = () => {
       setLoading(true);
       try {
         const response = await axios.get(`/api/posts`, {
-          params: { page: currentPage, limit: 9 }
+          params: { page: currentPage, limit: 9 },
+          headers: {
+            'Cache-Control': 'no-cache, max-age=43200'
+          }
         });
         const data = response.data;
         router.push(`/blog?page=${currentPage}`);
