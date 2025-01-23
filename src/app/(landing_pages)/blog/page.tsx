@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Masonry from "react-masonry-css";
 import axios from "axios";
+import AnimatedSearchBar from "@/components/custom-ui/AnimatedSaerchBar";
 
 const BlogPage = () => {
   const [blogPosts, setBlogPosts] = useState<IPost[]>([]);
@@ -24,7 +25,7 @@ const BlogPage = () => {
         const response = await axios.get(`/api/posts`, {
           params: { page: currentPage, limit: 9 },
           headers: {
-            'Cache-Control': 'no-cache, max-age=43200'
+            'Cache-Control': 'max-age=43200'
           }
         });
         const data = response.data;
@@ -50,6 +51,26 @@ const BlogPage = () => {
   const handlePrevPage = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleSearch = async (query: string) => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`/api/posts`, {
+        params: { page: 1, limit: 9, search: query },
+        headers: {
+          'Cache-Control': 'max-age=43200'
+        }
+      });
+      const data = response.data;
+      setBlogPosts(data.posts);
+      setTotalPages(data.totalPages);
+      setCurrentPage(1);
+    } catch (error) {
+      console.error("Error searching posts:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -116,6 +137,7 @@ const BlogPage = () => {
           id="blog-posts"
         ></div>
         <StyleSix title="Latest Posts" className="!text-4xl font-bold" />
+        <AnimatedSearchBar onSearch={handleSearch} />
 
       </div>
 
