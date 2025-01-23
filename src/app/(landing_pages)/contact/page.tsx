@@ -100,8 +100,8 @@ const ContactUs: React.FC = () => {
             whileTap={{ scale: 0.95 }}
           >
             <FaGithub className="w-6 h-6" />
-            <Link href={"https://github.com/CyberSaikat"} target="_blank">
-              github.com/CyberSaikat
+            <Link href={"https://github.com/sculptorofcode"} target="_blank">
+              github.com/sculptorofcode
             </Link>
           </motion.div>
         </motion.div>

@@ -1,13 +1,13 @@
 # 🎓 The Educative
 
-![Leading Image](https://raw.githubusercontent.com/CyberSaikat/the-educative/main/public/images/banner.png)
+![Leading Image](https://raw.githubusercontent.com/sculptorofcode/the-educative/main/public/images/banner.png)
 
 **The Educative** is a cutting-edge educational platform designed to empower developers and computer science enthusiasts with advanced skills in modern web development. This project showcases a comprehensive range of features to support learning, collaboration, and professional growth using state-of-the-art technologies.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/CyberSaikat/the-educative/issues)
-[![GitHub Stars](https://img.shields.io/github/stars/CyberSaikat/the-educative.svg)](https://github.com/CyberSaikat/the-educative/stargazers)
-[![GitHub Issues](https://img.shields.io/github/issues/CyberSaikat/the-educative.svg)](https://github.com/CyberSaikat/the-educative/issues)
+[![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/sculptorofcode/the-educative/issues)
+[![GitHub Stars](https://img.shields.io/github/stars/sculptorofcode/the-educative.svg)](https://github.com/sculptorofcode/the-educative/stargazers)
+[![GitHub Issues](https://img.shields.io/github/issues/sculptorofcode/the-educative.svg)](https://github.com/sculptorofcode/the-educative/issues)
 
 ## 📚 Table of Contents
 - [🎓 The Educative](#-the-educative)
@@ -85,7 +85,7 @@ Follow these steps to get The Educative up and running on your local machine:
 
 1. **Clone the Repository**
    ```bash
-   git clone https://github.com/CyberSaikat/the-educative.git
+   git clone https://github.com/sculptorofcode/the-educative.git
    cd the-educative
    ```
 
